@@ -74,3 +74,49 @@ Server is running on 5000
 Middleware executed!
 Inside GET route
 ```
+
+## MongoDB Cloud
+
+We will use [MongoDB Atlas](cloud.mongodb.com) as our database backend.
+
+- Sign in
+- Create a New Project
+- Create a New cluster
+- Click on "Connect"
+- Set Connection Security as "Allow access from anywhere"
+- Choose the 2nd connection method i.e. "Connect your application to your cluster using MongoDB's native drivers"
+- Copy the URL
+- Store this URL as an environment variable or in a file which you must 'gitignore' (I've used keys.js as the ignored file)
+
+From the terminal install a package
+
+```
+npm install mongoose
+```
+
+Now use the below code for establishing a connection between the database server and the Node server.
+
+```javascript
+const mongoose = require("mongoose");
+
+const { MONGOURI } = require("./keys");
+
+mongoose.connect(MONGOURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+mongoose.connection.on("connected", () => {
+  console.log("Connected to Mongo!");
+});
+mongoose.connection.on("error", () => {
+  console.log("Error connecting", err);
+});
+```
+
+For a clear idea of the MONGOURI variable in the above code, here is the keys.js file
+
+```javascript
+module.exports = {
+  MONGOURI: "Paste your URI from MongoDB Atlas here",
+};
+```
